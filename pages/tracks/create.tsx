@@ -1,17 +1,46 @@
 import { Button, Grid, TextField } from '@mui/material';
+import axios from 'axios';
+import { useRouter } from 'next/router';
 import React, { useState } from 'react'
+import Api from '../../api';
 import FileUploader from '../../components/FileUploader';
 import StepWrapper from '../../components/StepWrapper';
+import { useInput } from '../../hooks/useInput';
 import MainLayout from '../../layouts/MainLayout';
 import styles from '../../styles/create.module.sass';
 
 const Create = () => {
-    const [activeStep, setActiveStep] = useState(1);
+    const [activeStep, setActiveStep] = useState(0);
     const [picture, setPicture] = useState(null);
     const [audio, setAudio] = useState(null);
+    const [loading, setLoading] = useState(false);
+    const router = useRouter()
 
-    const next = () => {
-        setActiveStep(prew => prew+1)
+    const name = useInput('')
+    const artist = useInput('')
+    const text = useInput('')
+
+    const next = async() => {
+        if(activeStep !==2) {
+            setActiveStep(prew => prew+1)
+        } else {
+            const formData = new FormData();
+            formData.append('name', name.value)
+            formData.append('artist', artist.value)
+            formData.append('text', text.value)
+            setLoading(true)
+            try{
+                axios.post('http://localhost:4000/tracks', formData)
+                await Api.createTrack(formData);
+                setLoading(false)
+                router.push('/tracks')
+            }catch(err){
+                console.log(err)
+                setLoading(false)
+
+            }
+        }
+
     }
     const back = () => {
         setActiveStep(prew => prew-1)
@@ -21,9 +50,9 @@ const Create = () => {
             <StepWrapper activeStep={activeStep}> 
                 {activeStep === 0 && 
                     <Grid container flexDirection='column' className={styles.container}>
-                        <TextField className={styles.input} label={'Название трека'}/>
-                        <TextField className={styles.input} label={'Исполнитель'}/>
-                        <TextField className={styles.input}label={'Слова песни'}/>
+                        <TextField {...name} className={styles.input} label={'Название трека'}/>
+                        <TextField {...artist} className={styles.input} label={'Исполнитель'}/>
+                        <TextField {...text} className={styles.input}label={'Слова песни'}/>
                     </Grid>
                 }
                 {activeStep === 1 &&

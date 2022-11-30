@@ -10,6 +10,7 @@ import { ITrack } from '../../types/tracks';
 import actionCreators from '../../store/actionCreators';
 // import {store} from '../../store';
 import {END} from 'redux-saga';
+import { GetServerSideProps } from 'next';
 
 // import { Store } from 'redux'
 
@@ -17,14 +18,7 @@ const Index = () => {
     const router = useRouter();
 
     const state = useTypedSelector(state => state)
-    console.log('state', state);
     const {error, tracks} = state.tracks;
-
-   // const tracks: ITrack [] = [
-    //     {_id: '1', name: 'Track1', artist: 'Rammstein', text:'Sonne', listens: 4, picture: 'http://localhost:4000/image/459d481c-9f25-43eb-8b78-6fd805356da0.jpeg', audio: 'http://localhost:4000/audio/a01cbead-da79-4051-a90c-c70a8fd5fb8b.mp3', comments:[]},
-    //     {_id: '2', name: 'Track2', artist: 'Till Lindeman', text:'Aaaaa', listens: 4, picture: 'http://localhost:4000/image/459d481c-9f25-43eb-8b78-6fd805356da0.jpeg', audio: 'http://localhost:4000/audio/a01cbead-da79-4051-a90c-c70a8fd5fb8b.mp3', comments:[]},
-    //     {_id: '3', name: 'Track3', artist: 'Rammstein', text:'HEYYY', listens: 4, picture: 'http://localhost:4000/image/459d481c-9f25-43eb-8b78-6fd805356da0.jpeg', audio: 'http://localhost:4000/audio/a01cbead-da79-4051-a90c-c70a8fd5fb8b.mp3', comments:[]},
-    // ]
 
     if(error){
         return <MainLayout><h1>{error}</h1></MainLayout>
@@ -51,7 +45,7 @@ const Index = () => {
 
 export default Index
 
-export const getServerSideProps = wrapper.getServerSideProps((store) => async ({ req }) => {
+export const getServerSideProps:GetServerSideProps = wrapper.getServerSideProps((store) => async () => {
      // regular stuff
   store.dispatch(actionCreators.fetchTracks());
   // end the saga

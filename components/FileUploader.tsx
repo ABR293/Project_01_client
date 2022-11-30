@@ -23,6 +23,7 @@ const FileUploader:React.FC<IFileUploaderProps> = ({setFile, accept, children}) 
                 accept={accept}
                 style={{display: 'none'}}
                 ref={ref}
+                onChange={onChange}
             />
             {children}
         </div>
