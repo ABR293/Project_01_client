@@ -7,7 +7,7 @@ import TrackItem from './TrackItem'
 interface IFileUploaderProps {
     setFile: Function,
     accept: string,
-    children: any
+    children: JSX.Element
 }
 
 const FileUploader:React.FC<IFileUploaderProps> = ({setFile, accept, children}) => {

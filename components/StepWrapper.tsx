@@ -7,7 +7,7 @@ import { JsxElement } from 'typescript';
 
 interface IStepWrapperProps {
     activeStep: number;
-    children: any
+    children: JSX.Element
 }
 const steps=['Информация о треке', 'Загрузите обложку', 'Загрузите трек']
 const StepWrapper:React.FC<IStepWrapperProps> = ({activeStep, children}) => {
