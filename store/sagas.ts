@@ -5,20 +5,23 @@ import { ITrack } from '../types/tracks';
 import { ServerResponse } from 'http';
 import Api from '../api';
 
-function* workerFetchTracs() {
+function* workerFetchTracs({payload = ''}) {
    try {
-      const res:ServerResponse = yield call(() => Api.getTracks() );
-      const resp = res as any
-      console.log('res', resp);
-      const tracks = resp.data as ITrack[]
-      yield put(actionCreators.fetchTracksSuccess(resp.data));
+      let data:ITrack[] = []
+      if (payload !== '') {
+         data = yield call(() => Api.searchTracks(payload));
+      } else {
+         data = yield call(() => Api.getAllTracks() );
+      }
+      yield put(actionCreators.fetchTracksSuccess(data));
    } catch (err) {
       yield put(actionCreators.fetchTracksError('Произошла ошибка при загрузке треков')); 
    }
 }
 
 function* tracksSaga() {
-   yield takeEvery('tracks/fetchTracks', workerFetchTracs)
+   // yield takeEvery('tracks/fetchTracks', workerFetchTracs)
+   yield takeLatest('getTracks', workerFetchTracs)
 }
 
 export default  function* rootSaga() {

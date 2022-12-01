@@ -1,7 +1,7 @@
-import { Button, Card, Grid } from '@mui/material';
+import { Button, Card, Grid, TextField } from '@mui/material';
 import { Box } from '@mui/system';
 import { useRouter } from 'next/router';
-import React, { useTransition } from 'react'
+import React, { useState, useTransition } from 'react'
 import TrackList from '../../components/TrackList';
 import { useTypedSelector } from '../../hooks/useTypedSelector';
 import MainLayout from '../../layouts/MainLayout';
@@ -11,15 +11,21 @@ import actionCreators from '../../store/actionCreators';
 // import {store} from '../../store';
 import {END} from 'redux-saga';
 import { GetServerSideProps } from 'next';
+import { useActions } from '../../hooks/useActions';
+import { useInput } from '../../hooks/useInput';
 
 // import { Store } from 'redux'
 
 const Index = () => {
     const router = useRouter();
 
-    const state = useTypedSelector(state => state)
-    const {error, tracks} = state.tracks;
+    const state = useTypedSelector(state => state.tracks)
+    const {error, tracks} = state;
 
+    const [query, setQuery] = useState('');
+    const [timer, setTimer] = useState(null);
+
+    const {getTracks} = useActions();
     if(error){
         return <MainLayout><h1>{error}</h1></MainLayout>
     }
@@ -34,8 +40,20 @@ const Index = () => {
                             <Button onClick={() => {router.push('/tracks/create')}}>Загрузить</Button>
                         </Grid>
                     </Box>
-                    
                 </Card>
+                <TextField
+                    fullWidth
+                    value={query}
+                    onChange={ (e:React.ChangeEvent<HTMLInputElement>) => {
+                        setQuery(e.target.value)
+                        if(timer) {
+                            clearTimeout(timer)
+                        }
+                        setTimer(setTimeout( () => getTracks(e.target.value),  500))
+                         
+                    }}
+                />
+                    
             </Grid>
             <TrackList tracks={tracks} /> 
         </MainLayout>
@@ -47,7 +65,7 @@ export default Index
 
 export const getServerSideProps:GetServerSideProps = wrapper.getServerSideProps((store) => async () => {
      // regular stuff
-  store.dispatch(actionCreators.fetchTracks());
+  store.dispatch(actionCreators.getTracks(''));
   // end the saga
   store.dispatch(END);
   await store.sagaTask.toPromise();

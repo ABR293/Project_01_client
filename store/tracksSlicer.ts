@@ -4,8 +4,7 @@ import { createSlice } from '@reduxjs/toolkit'
 import type { PayloadAction } from '@reduxjs/toolkit'
 
 const initialState = {
-    counter: 0,
-    loading: false,
+    query: '' as string | undefined,
     error: '',
     tracks: [] as ITrack[],
 }
@@ -15,16 +14,18 @@ const trackSlice = createSlice({
     name: 'tracks',
     initialState,
     reducers: {
-        fetchTracks(state){
-          state.loading = true
-          state.counter ++
-        },
+        // (state, action: PayloadAction<string> ){
+        //   if(action.payload){
+        //     state.query = action.payload
+        //   }
+        // },
+        // setQuery(state, action: PayloadAction<string> ){
+        //   state.query = action.payload
+        // },
         fetchTracksSuccess(state, action: PayloadAction<ITrack[]> ){
-          state.loading = false
           state.tracks = action.payload 
         },
         fetchTracksError(state, action: PayloadAction<string> ){
-          state.loading = false
           state.error = action.payload 
         },
     }

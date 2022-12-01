@@ -3,8 +3,11 @@ export const baseURL = 'http://localhost:4000/';
 const _axios = axios.create({baseURL});
 
 class Api {
-    static getTracks = async () => (
-        await _axios.get('tracks')
+    static getAllTracks = async () => (
+        await _axios.get('tracks').then(res =>res.data)
+    )
+    static searchTracks = async (query:string) => (
+        await _axios.get(`tracks/search?query=`+query).then(res =>res.data)
     )
 
     static getTrack = async (id:any) => 
