@@ -1,8 +1,10 @@
 import { Container } from '@mui/material';
 import Head from 'next/head';
-import React from 'react'
+import React, {useEffect} from 'react'
 import Nawbar from '../components/Navbar';
 import Player from '../components/Player';
+
+
 
 interface IMainLayoutProps {
     children: JSX.Element | any
@@ -11,6 +13,7 @@ interface IMainLayoutProps {
 }
 
 const MainLayout: React.FC<IMainLayoutProps> = ({children, title, keywords}) => {
+ 
     return (
         <>
             <Head>
