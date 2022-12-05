@@ -28,6 +28,8 @@ const Create = () => {
             formData.append('name', name.value)
             formData.append('artist', artist.value)
             formData.append('text', text.value)
+            picture && formData.append('picture', picture)
+            audio && formData.append('audio', audio)
             setLoading(true)
             try{
                 axios.post('http://localhost:4000/tracks', formData)
