@@ -1,8 +1,6 @@
-import { Grid } from '@mui/material'
-import { Box } from '@mui/system'
+
 import React from 'react'
-import { ITrack } from '../types/tracks'
-import TrackItem from './TrackItem'
+import styles from '../styles/TrackProgress.module.sass'
 
 interface ITrackProgressProps {
     left: number
@@ -10,16 +8,30 @@ interface ITrackProgressProps {
     onChange: (e:any) => void
 }
 const TrackProgress:React.FC<ITrackProgressProps> = ({left, right, onChange}) => {
+
+    const changeCuttentTime = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const value = +e.target.value;
+        onChange(value)
+    }
+
+    const toTime = (val:number) => {
+        const h = Math.floor(val/3600)
+        const m = Math.floor((val%3600)/60)
+        const s = Math.floor(val%60)
+        const format = (v:number) => (v < 10 ? `0${v}` : `${v}`)
+        return (`${format(h)}:${format(m)}:${format(s)}`)
+    }
     return (
-        <div style={{display: 'flex'}}>
+        <div className={styles.container}>
             <input 
                 type='range'
                 min={0}
                 max={right}
                 value={left}
-                onChange={onChange}
+                onChange={changeCuttentTime}
+                width={500}
             />
-            <div>{left} / {right}</div>
+            <p>{toTime(left)} / {toTime(right)}</p>
         </div>
     )
 }

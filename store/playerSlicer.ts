@@ -9,6 +9,7 @@ const initialState = {
     active: null as null | ITrack,
     volume: 50 as number,
     pause: true as boolean,
+    isSoundOn: true as boolean,
 }
 export type PlayerState = typeof initialState
 
@@ -28,13 +29,16 @@ const playerSlice = createSlice({
         setVolume (state, action: PayloadAction<number>) {
             state.volume = action.payload
         },
+        toggleSound (state, action: PayloadAction<boolean>) {
+            state.isSoundOn = action.payload
+        },
         setDuration (state, action: PayloadAction<number>) {
             state.duration = action.payload
         },
         setActiveTrack (state, action:PayloadAction<ITrack>) {
             state.active = action.payload
             state.duration = 0
-            state.currentTime=0
+            state.currentTime = 0
         }
     }
 })
