@@ -1,4 +1,4 @@
-import { ITrack } from "../types/tracks"
+import { ITrack } from "../../types/tracks"
 
 import { createSlice } from '@reduxjs/toolkit'
 import type { PayloadAction } from '@reduxjs/toolkit'
@@ -14,14 +14,6 @@ const trackSlice = createSlice({
     name: 'tracks',
     initialState,
     reducers: {
-        // (state, action: PayloadAction<string> ){
-        //   if(action.payload){
-        //     state.query = action.payload
-        //   }
-        // },
-        // setQuery(state, action: PayloadAction<string> ){
-        //   state.query = action.payload
-        // },
         fetchTracksSuccess(state, action: PayloadAction<ITrack[]> ){
           state.tracks = action.payload 
         },

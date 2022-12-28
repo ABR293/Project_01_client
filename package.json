@@ -21,6 +21,7 @@
     "axios": "^1.2.0",
     "eslint": "8.28.0",
     "eslint-config-next": "13.0.4",
+    "jwt-decode": "^3.1.2",
     "next": "13.0.4",
     "next-redux-saga": "^4.1.2",
     "next-redux-wrapper": "^8.0.0",

@@ -1,9 +1,10 @@
-import { call, put, takeEvery, takeLatest } from 'redux-saga/effects'
-import actionCreators from './actionCreators'
-import axios, { Axios, AxiosResponse } from 'axios'
-import { ITrack } from '../types/tracks';
-import { ServerResponse } from 'http';
-import Api from '../api';
+import { call, put } from 'redux-saga/effects'
+import actionCreators from '../actionCreators'
+import { ITrack } from '../../types/tracks';
+import Api from '../../api';
+import * as Eff from 'redux-saga/effects'
+const takeEvery: any = Eff.takeEvery;    
+const takeLatest: any = Eff.takeLatest;  
 
 function* workerFetchTracs({payload = ''}) {
    try {
@@ -19,12 +20,6 @@ function* workerFetchTracs({payload = ''}) {
    }
 }
 
-function* tracksSaga() {
-   // yield takeEvery('tracks/fetchTracks', workerFetchTracs)
+export function* tracksSaga() {
    yield takeLatest('getTracks', workerFetchTracs)
 }
-
-export default  function* rootSaga() {
-   yield tracksSaga()
-}
-

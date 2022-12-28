@@ -30,7 +30,6 @@ export default function InputSlider(props:InputSliderProps) {
       setValue(100);
     }
   };
-  // console.log(2, isSoundOn)
   return (
     <div style={{width: 250}}>
       <Grid container spacing={2} alignItems="center">

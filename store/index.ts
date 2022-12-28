@@ -3,13 +3,15 @@ import { Store } from 'redux'
 import {configureStore} from '@reduxjs/toolkit'
 import createSagaMiddleware, {Task} from 'redux-saga'
 import { combineReducers } from '@reduxjs/toolkit'
-import playerReducer  from './playerSlicer';
-import tracksReducer  from './tracksSlicer';
+import playerReducer  from './slicers/playerSlicer';
+import tracksReducer  from './slicers/tracksSlicer';
 import rootSaga from './sagas';
+import authSlicer from './slicers/authSlicer';
 
  const rootReducer = combineReducers({
     player: playerReducer,
-    tracks: tracksReducer
+    tracks: tracksReducer,
+    auth: authSlicer,
 })
 
 export type RootState = ReturnType<typeof rootReducer>
