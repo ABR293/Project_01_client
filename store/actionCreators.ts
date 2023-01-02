@@ -3,7 +3,6 @@
 import {playerActions} from './slicers/playerSlicer'
 import {trackActions} from './slicers/tracksSlicer'
 import {authActions} from './slicers/authSlicer'
-import { AuthData } from '../api'
 
 const actionCreators = {
     ...playerActions,
@@ -12,8 +11,11 @@ const actionCreators = {
     
     getTracks: (query:string) => ({type: 'getTracks', payload: query}),
     getUser: (id:string) => ({type: 'getUsers', payload: id}),
-    login: (data: AuthData) => ({type: 'login', payload: data}),
+    loginUser: (data: FormData) => ({type: 'loginUser', payload: data}),
+    registrationUser: (data: FormData) => ({type: 'registrationUser', payload: data}),
+    fogotPassport : (data: FormData) => ({type: 'fogotPassport', payload: data}),
     hello: () => ({type: 'hello'}), // test
+    logout: () => ({type: 'logout'}),
 }
 
 export default actionCreators

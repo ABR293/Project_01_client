@@ -3,8 +3,6 @@ import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
 import Link from '@mui/material/Link';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
@@ -12,22 +10,11 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { useInput } from '../hooks/useInput';
-import Api, { AuthData } from '../api';
-import { useRouter } from 'next/router';
-
-function Copyright(props: any) {
-  return (
-    <Typography variant="body2" color="text.secondary" align="center" {...props}>
-      {'Copyright © '}
-      <Link color="inherit" href="https://mui.com/">
-        Your Website
-      </Link>{' '}
-      {new Date().getFullYear()}
-      {'.'}
-    </Typography>
-  );
-}
+import { useFormValidation } from '../hooks/useFormValidation';
+import { useTypedSelector } from '../hooks/useTypedSelector';
+import { useActions } from '../hooks/useActions';
+import { useState } from 'react';
+import { CircularProgress } from '@mui/material';
 
 const theme = createTheme();
 
@@ -37,21 +24,24 @@ interface ISignInProps {
 
 const SignUp:React.FC<ISignInProps> = ({onChangeReg}) => {
 
-
-  const router = useRouter()
+  const {registrationUser} = useActions()
+  const {error, loading} = useTypedSelector(state => state.auth)
+  const validation = useFormValidation();
+  const [showErr, setShowErr] = useState(false);
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     let  data = new FormData(event.currentTarget);
-    try { 
-      const res = await Api.registration(data as unknown as AuthData );
-      // router.push('/profile')
-    }catch(err){
-      console.log(err)
-
-    }
+    validation.validate(data, async() => {
+      try { 
+        registrationUser(data)
+      }catch(err){
+        console.log(err)
+  
+      }
+    })
+    setShowErr(true)
   };
-
   return (
     <ThemeProvider theme={theme}>
       <Container component="main" maxWidth="xs">
@@ -72,39 +62,25 @@ const SignUp:React.FC<ISignInProps> = ({onChangeReg}) => {
           </Typography>
           <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
             <Grid container spacing={2}>
-              {/* <Grid item xs={12} sm={6}>
-                <TextField
-                  autoComplete="given-name"
-                  name="firstName"
-                  required
-                  fullWidth
-                  id="firstName"
-                  label="First Name"
-                  autoFocus
-                />
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <TextField
-                  required
-                  fullWidth
-                  id="lastName"
-                  label="Last Name"
-                  name="lastName"
-                  autoComplete="family-name"
-                />
-              </Grid> */}
               <Grid item xs={12}>
                 <TextField
+                  error={!!validation.errors.login}
+                  helperText={validation.errors.login}
                   required
                   fullWidth
                   id="login"
                   label="Email Address"
                   name="login"
                   autoComplete="email"
+                  onFocus={() => setShowErr(false)}
+
                 />
               </Grid>
+              {/* <Typography variant="caption" >Enter the password</Typography> */}
               <Grid item xs={12}>
                 <TextField
+                  error={!!validation.errors.password}
+                  helperText={validation.errors.password}
                   required
                   fullWidth
                   name="password"
@@ -112,22 +88,45 @@ const SignUp:React.FC<ISignInProps> = ({onChangeReg}) => {
                   type="password"
                   id="password"
                   autoComplete="new-password"
+                  onFocus={() => setShowErr(false)}
+
                 />
               </Grid>
               <Grid item xs={12}>
-                <FormControlLabel
-                  control={<Checkbox value="allowExtraEmails" color="primary" />}
-                  label="I agree with condidions of using and privacy policy"
+                <TextField
+                   error={!!validation.errors.passwordRepeat}
+                   helperText={validation.errors.passwordRepeat}
+                  required
+                  fullWidth
+                  name="passwordRepeat"
+                  label="Repeat password"
+                  type="password"
+                  id="passwordRepeat"
+                  autoComplete="new-password"
+                  onFocus={() => setShowErr(false)}
+
                 />
               </Grid>
+              <Grid item xs={12}>
+              </Grid>
             </Grid>
+            <Box height={12}>
+              <Typography color={'#c80000'}>
+                {showErr ? error : ' '}
+              </Typography>
+            </Box>
             <Button
+              disabled={loading}
               type="submit"
               fullWidth
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
             >
-              Sign Up
+               {loading 
+                ? <CircularProgress/> 
+                : <Box height={40} 
+                    padding={1}
+                  >Sign Up</Box>}
             </Button>
             <Grid container justifyContent="flex-end">
               <Grid item>
@@ -138,7 +137,6 @@ const SignUp:React.FC<ISignInProps> = ({onChangeReg}) => {
             </Grid>
           </Box>
         </Box>
-        {/* <Copyright sx={{ mt: 5 }} /> */}
       </Container>
     </ThemeProvider>
   );

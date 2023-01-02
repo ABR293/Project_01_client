@@ -46,15 +46,20 @@ class Api {
 
      // AUTH
 
-    static registration = async(data: AuthData):Promise<string> => 
+    static registration = async(data: FormData):Promise<string> => 
         await _api.post('auth/registration', data).then(res => res.data)
 
-    static login = async(data: AuthData):Promise<string> => 
+    static login = async(data: FormData):Promise<string> => 
         await _api.post('auth/login', data).then(res => res.data)
 
     static logout = async(id:string):Promise<void> => 
         await _api.get(`auth/logout/${id}`)
 
+    static fogotPassword = async(login:string):Promise<any> => 
+    await _api.get(`auth/fogotPassword/${login}`)
+
+    static resetPassword = async(data:FormData):Promise<any> => 
+    await _api.post(`auth/resetPassword`, data)
 
     // TRACKS
     static getAllTracks = async ():Promise<ITrack[]> => (

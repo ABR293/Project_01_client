@@ -108,13 +108,9 @@ const Index:React.FC<ProfilePropTypes> = () => {
   const router = useRouter()
 
   const {
-    logoutUser
+    logout
   } = useActions();
 
-  const refresh = async() => {
-    const res = await Api.refesh()
-    console.log(res)
-  }
 
     return (  
         <MainLayout title={'Профиль'}>
@@ -152,21 +148,10 @@ const Index:React.FC<ProfilePropTypes> = () => {
                 <Grid xs={1}>
                     <div className={styles.info}>
                         <IconButton onClick={() => {
-                          logoutUser()
-                          router.push('./auth')
-                          // refresh()
+                          logout()
                         }}>
-                            <ExitToApp/>
-                        </IconButton>
-                        <IconButton onClick={() => {
-                          Api.getUsers();
-                        }}>
-                            getUsers
-                        </IconButton>
-                        <IconButton onClick={() => {
-                          Api.refesh();
-                        }}>
-                            Refresh
+                            {/* <ExitToApp/> */}
+                            fuuck
                         </IconButton>
                     </div>
                 </Grid>

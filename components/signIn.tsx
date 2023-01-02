@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useState } from "react"
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -12,41 +13,31 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { AuthData } from '../api';
-import { useRouter } from 'next/router';
 import { useActions } from '../hooks/useActions';
 import { useTypedSelector } from '../hooks/useTypedSelector';
-
-function Copyright(props: any) {
-
-  return (
-    <Typography variant="body2" color="text.secondary" align="center" {...props}>
-      {'Copyright © '}
-      <Link color="inherit" href="https://mui.com/">
-        Your Website
-      </Link>{' '}
-      {new Date().getFullYear()}
-      {'.'}
-    </Typography>
-  );
-}
-
+import { CircularProgress } from '@mui/material';
 const theme = createTheme();
 
 interface ISignInProps {
   onChangeReg: Function
 }
 
+
 const SignIn:React.FC<ISignInProps> = ({onChangeReg}) => {
-  const {login} = useActions()
+  const {loginUser, } = useActions()
+  const {error, loading} = useTypedSelector(state => state.auth)
+  const [showErr, setShowErr] = useState(false);
+  // const validation = useFormValidation()
+
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    login(data as unknown as AuthData);
+    loginUser(data)
+    setShowErr(true)
 
   };
-
+  console.log('F_error', error)
   return (
     <ThemeProvider theme={theme}>
       <Container component="main" maxWidth="xs">
@@ -75,6 +66,8 @@ const SignIn:React.FC<ISignInProps> = ({onChangeReg}) => {
               name="login"
               autoComplete="email"
               autoFocus
+              onFocus={() => setShowErr(false)}
+              
             />
             <TextField
               margin="normal"
@@ -85,22 +78,30 @@ const SignIn:React.FC<ISignInProps> = ({onChangeReg}) => {
               type="password"
               id="password"
               autoComplete="current-password"
+              onFocus={() => setShowErr(false)}
             />
-            <FormControlLabel
-              control={<Checkbox value="remember" color="primary" />}
-              label="Remember me"
-            />
+            <Box height={12}>
+              <Typography color={'#c80000'}>
+                {showErr ? error : ' '}
+              </Typography>
+            </Box>
+            
             <Button
+              disabled={loading}
               type="submit"
               fullWidth
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
             >
-              Sign In
+               {loading 
+                ? <CircularProgress/> 
+                : <Box height={40} 
+                    padding={1}
+                  >Sign In</Box>}
             </Button>
             <Grid container>
               <Grid item xs>
-                <Link href="#" variant="body2">
+                <Link href="auth/passwordReset" variant="body2">
                   Forgot password?
                 </Link>
               </Grid>
@@ -112,7 +113,6 @@ const SignIn:React.FC<ISignInProps> = ({onChangeReg}) => {
             </Grid>
           </Box>
         </Box>
-        {/* <Copyright sx={{ mt: 8, mb: 4 }} /> */}
       </Container>
     </ThemeProvider>
   );

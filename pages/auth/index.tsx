@@ -22,6 +22,7 @@ const Index:React.FC<ProfilePropTypes> = () => {
     const {isAuth} = useTypedSelector(state => state.auth)
     useEffect(() => {
         const token = localStorage.getItem('accessToken');
+        console.log(token)
         if(token){
             setUserData(jwt_decode(token) as UserDataType)
             router.push('./profile')
