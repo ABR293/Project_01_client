@@ -1,14 +1,15 @@
 import { call, put } from 'redux-saga/effects'
 import actionCreators from '../actionCreators'
-import Api, { AuthData } from '../../api';
+import Api from '../../api';
 import * as Eff from 'redux-saga/effects'
 import { PayloadAction } from '@reduxjs/toolkit';
-const takeEvery: any = Eff.takeEvery;    
-const takeLatest: any = Eff.takeLatest; 
 import jwt_decode from "jwt-decode";
 import { UserDataType } from '../slicers/authSlicer';
 import { store } from '..';
-import { ConstructionOutlined } from '@mui/icons-material';
+import { AxiosError } from 'axios';
+
+const takeEvery: any = Eff.takeEvery;    
+const takeLatest: any = Eff.takeLatest; 
 
 function* workerRegistration(action:PayloadAction<FormData>) {
    try {
@@ -18,25 +19,19 @@ function* workerRegistration(action:PayloadAction<FormData>) {
       localStorage.setItem('accessToken', token)
       yield put(actionCreators.setUserData(jwt_decode(token) as UserDataType))
    } catch (err) {
-      console.log(3)
-      if(err?.response?.data){
-         const message:string = err?.response?.data?.message
-         yield put(actionCreators.setError(message))
-      }
+      yield put(actionCreators.setError(submitError(err)))
    }
 }
 
-function* workerLogin(action:PayloadAction<AuthData>) {
+function* workerLogin(action:PayloadAction<FormData>) {
    try {
       yield put(actionCreators.setLoading(true))
       const accessToken:string = yield call(() => Api.login(action.payload));
       localStorage.setItem('accessToken', accessToken)
       yield put(actionCreators.setUserData(jwt_decode(accessToken) as UserDataType))
    } catch (err) {
-      if(err?.response?.data){
-         const message:string = err?.response?.data?.message
-         yield put(actionCreators.setError(message))
-      }
+      yield put(actionCreators.setError(submitError(err)))
+      
    }
 }
  
@@ -51,20 +46,19 @@ function* workerLogout() {
       console.log(err); 
    }
 }
-function* workerPasswordFogot(action:PayloadAction<string>) {
-   try {
-      yield call(() => Api.fogotPassword(action.payload));
-   } catch (err) {
-      if(err?.response?.data){
-         const message:string = err?.response?.data?.message
-         yield put(actionCreators.setError(message))
-      }
-   }
-}
 
 export default function* authSaga() {
    yield takeLatest('loginUser', workerLogin)
    yield takeLatest('registrationUser', workerRegistration)
    yield takeLatest('logout', workerLogout)
-   yield takeLatest('fogotPassword', workerPasswordFogot)
+}
+
+const submitError = (err:any):string => {
+   if (err instanceof AxiosError) {
+      const message:string = err?.response?.data?.message
+      return message
+   } else {
+      console.log(err)
+      return ''
+   }
 }

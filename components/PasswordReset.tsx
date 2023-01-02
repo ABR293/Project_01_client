@@ -17,36 +17,39 @@ import { AccordionSummary, AccordionDetails} from '@mui/material';
 import { styled } from '@mui/material/styles';
 const theme = createTheme();
 
-interface ISignInProps {
-  onChangeReg: Function
-}
+const SignIn:React.FC = () => {
 
-const SignIn:React.FC<any> = ({onChangeReg}) => {
+    const validation = useFormValidation();
+    const [error, setError] = useState<string | null>(null);
+    const [loading, setLoading] = useState(false);
+    const [login, setLogin] = useState<string | null>(null)
+    const router = useRouter()
 
-  const validation = useFormValidation();
-  const [error, setError] = useState<string | null>(null);
-  const [loading, setLoading] = useState(false);
-  const [login, setLogin] = useState<string | null>(null)
-  const router = useRouter()
-  const handleSubmitMail = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    const L_data = new FormData(event.currentTarget);
-    validation.validate(L_data, async ()=> {
-        try {
-            setLoading(true)
-            const res = await Api.fogotPassword(L_data.get('login') as string)
-            setLogin(res.data.response)
-            setLoading(false)
-        } catch(err){
+    const submitAxiosError = (err:any) => {
+        if (err instanceof AxiosError) {
             const message:string = err?.response?.data?.message
-            console.log(message)
-            setLoading(false)
             setError(message)
+            setLoading(false)
+        } else {
+            console.log(err)
         }
-    })
-   
-  };
-  const handleSubmitPassword = async (event: React.FormEvent<HTMLFormElement>) => {
+    }
+
+    const handleSubmitMail = async (event: React.FormEvent<HTMLFormElement>) => {
+        event.preventDefault();
+        const L_data = new FormData(event.currentTarget);
+        validation.validate(L_data, async ()=> {
+            try {
+                setLoading(true)
+                const res = await Api.fogotPassword(L_data.get('login') as string)
+                setLogin(res.data.response)
+                setLoading(false)
+            } catch(err) {
+                submitAxiosError(err)
+            }
+        })
+    };
+    const handleSubmitPassword = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const P_data = new FormData(event.currentTarget);
     validation.validate(P_data, async ()=> {
@@ -58,11 +61,7 @@ const SignIn:React.FC<any> = ({onChangeReg}) => {
             setLoading(false)
             router.push('./')
         } catch(err){
-            console.log(err)
-            const message:string = err?.response?.data?.message
-            setError(message)
-            setLoading(false)
-
+            submitAxiosError(err)
         }
     })
    
@@ -219,6 +218,7 @@ import Fab from '@mui/material/Fab';
 import CheckIcon from '@mui/icons-material/Check';
 import SaveIcon from '@mui/icons-material/Save';
 import { Router } from '@mui/icons-material';
+import { AxiosError } from 'axios';
 
 export function CircularIntegration() {
   const [loading, setLoading] = React.useState(false);

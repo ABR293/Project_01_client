@@ -5,6 +5,7 @@
 import axios, { AxiosResponse } from 'axios'
 import { store } from '../store';
 import { ITrack } from '../types/tracks';
+import { IUser } from '../types/users';
 export const baseURL = 'http://localhost:4000/';
 const _api = axios.create({
     withCredentials: true,
@@ -55,19 +56,18 @@ class Api {
     static logout = async(id:string):Promise<void> => 
         await _api.get(`auth/logout/${id}`)
 
-    static fogotPassword = async(login:string):Promise<any> => 
+    static fogotPassword = async(login:string):Promise<AxiosResponse> => 
     await _api.get(`auth/fogotPassword/${login}`)
 
-    static resetPassword = async(data:FormData):Promise<any> => 
+    static resetPassword = async(data:FormData):Promise<AxiosResponse> => 
     await _api.post(`auth/resetPassword`, data)
 
     // TRACKS
-    static getAllTracks = async ():Promise<ITrack[]> => (
+    static getAllTracks = async ():Promise<ITrack[]> =>
         await _api.get('tracks').then(res =>res.data)
-    )
-    static searchTracks = async (query:string):Promise<ITrack[]> => (
+
+    static searchTracks = async (query:string):Promise<ITrack[]> =>
         await _api.get(`tracks/search?query=`+query).then(res =>res.data)
-    )
 
     static getTrack = async (id:any):Promise<AxiosResponse<ITrack>> => 
         await _api.get('tracks/'+(id+''))
@@ -80,18 +80,15 @@ class Api {
 
     // USERS
     
-    static getUser = async (id:any):Promise<AxiosResponse<any>> => 
-        await _api.get('users/'+(id+''))
+    static getUser = async (id:any):Promise<IUser> => 
+        await _api.get('users/'+(id+'')).then(res => res.data)
 
+    static searchUsers = async (query:string):Promise<ITrack[]> => 
+        await _api.get(`tracks/search?query=`+query).then(res => res.data)
 
-    static getUsers = async ():Promise<AxiosResponse<any>> => 
-        await _api.get('users/')
+    static getUsers = async ():Promise<IUser[]> => 
+        await _api.get('users/').then(res => res.data)
+        
     }
 
-export type AuthData = {
-    login: string
-    password: string
-}
-
 export default Api;
-

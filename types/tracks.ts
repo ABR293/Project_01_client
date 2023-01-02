@@ -21,15 +21,3 @@ export interface ITrack {
 export interface ITrackList {
     tracks: ITrack[]
 }
-
-
-export interface IUser {
-    _id: string
-    name: string;
-    artist: string;
-    text: string;
-    listens: number;
-    picture: string;
-    audio: string;
-    comments: IComment[];
-}
