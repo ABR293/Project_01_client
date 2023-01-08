@@ -1,25 +1,27 @@
-import { call, put } from 'redux-saga/effects'
-import actionCreators from '../actionCreators'
-import { ITrack } from '../../types/tracks';
-import Api from '../../api';
-import * as Eff from 'redux-saga/effects'
-const takeEvery: any = Eff.takeEvery;    
-const takeLatest: any = Eff.takeLatest;  
+import { call, put } from "redux-saga/effects";
+import actionCreators from "../actionCreators";
+import { ITrack } from "../../types/tracks";
+import Api from "../../api";
+import * as Eff from "redux-saga/effects";
+import { SagaAcceptor } from "./index";
 
-function* workerFetchTracs({payload = ''}) {
-   try {
-      let data:ITrack[] = []
-      if (payload !== '') {
-         data = yield call(() => Api.searchTracks(payload));
-      } else {
-         data = yield call(() => Api.getAllTracks() );
-      }
-      yield put(actionCreators.fetchTracksSuccess(data));
-   } catch (err) {
-      yield put(actionCreators.fetchTracksError('Произошла ошибка при загрузке треков')); 
-   }
+export const fetchTracksError = "Произошла ошибка при загрузке треков";
+export function* workerFetchTracs({ payload = "" }) {
+  try {
+    let data: ITrack[] = [];
+    if (payload !== "") {
+      data = yield call(Api.searchTracks, payload);
+    } else {
+      data = yield call(Api.getAllTracks);
+    }
+    yield put(actionCreators.fetchTracksSuccess(data));
+  } catch (err) {
+    yield put(actionCreators.fetchTracksError(fetchTracksError));
+  }
 }
 
+const takeLatest: SagaAcceptor = () => Eff.takeLatest;
+
 export function* tracksSaga() {
-   yield takeLatest('getTracks', workerFetchTracs)
+  yield takeLatest("GET_TRACKS", workerFetchTracs);
 }

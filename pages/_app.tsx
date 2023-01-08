@@ -1,29 +1,27 @@
-import React, {Component, FC} from 'react';
-import App, {AppProps} from 'next/app';
-import {END} from 'redux-saga';
-import {SagaStore, wrapper} from '../store';
-import withReduxSaga from 'next-redux-saga'
+import React, { Component, FC } from "react";
+import App, { AppProps } from "next/app";
+import { END } from "redux-saga";
+import { SagaStore, wrapper } from "../store";
+import withReduxSaga from "next-redux-saga";
 
 class MyApp extends App {
-  static async getInitialProp({Component , ctx}) {
-    let pageProps = {}
+  static async getInitialProp({ Component, ctx }) {
+    let pageProps = {};
 
     if (Component.getInitialProps) {
-      pageProps = await Component.getInitialProps(ctx)
+      pageProps = await Component.getInitialProps(ctx);
     }
 
-    return {pageProps}
+    return { pageProps };
   }
 
   render() {
-    const {Component, pageProps} = this.props
-    return (
-      <Component {...pageProps} />
-    )
+    const { Component, pageProps } = this.props;
+    return <Component {...pageProps} />;
   }
 }
 
-export default wrapper.withRedux(withReduxSaga(MyApp))
+export default wrapper.withRedux(withReduxSaga(MyApp));
 
 // export default wrapper.withRedux(MyApp);
 
@@ -55,7 +53,6 @@ export default wrapper.withRedux(withReduxSaga(MyApp))
 
 // /// /// /// /// /// ///
 
-
 // import withReduxSaga from 'next-redux-saga'
 // import {wrapper} from '../store'
 
@@ -78,9 +75,7 @@ export default wrapper.withRedux(withReduxSaga(MyApp))
 //   }
 // }
 
-
-/// /// /// /// /// /// /// /// /// /// /// 
-
+/// /// /// /// /// /// /// /// /// /// ///
 
 // class MyApp extends React.Component<AppProps> {
 //   render() {
@@ -89,4 +84,4 @@ export default wrapper.withRedux(withReduxSaga(MyApp))
 //   }
 // }
 
-/// // / // // / / / / / / / / /// / // / / / / / 
+/// // / // // / / / / / / / / /// / // / / / / /
