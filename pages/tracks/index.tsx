@@ -23,13 +23,17 @@ const Index = () => {
 
   const { getTracks } = useActions();
   const [query, setQuery] = useState("");
-  const [timer, setTimer] = useState(null);
+  // const [timer, setTimer] = useState(null);
+  const [timer, setTimer]: [
+    null | NodeJS.Timeout,
+    (interval: null | NodeJS.Timeout) => void
+  ] = useState<null | NodeJS.Timeout>(null);
 
   useEffect(() => {
     if (tracks.length === 0) {
       getTracks();
     }
-  }, []);
+  });
 
   //   const { getTracks } = useActions();
   if (error) {

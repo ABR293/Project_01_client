@@ -6,6 +6,12 @@ export interface IComment {
   disLikes: number;
 }
 
+export type CreateComment = {
+  userName: string;
+  text: string;
+  trackId: string;
+};
+
 export interface ITrack {
   _id: string;
   name: string;

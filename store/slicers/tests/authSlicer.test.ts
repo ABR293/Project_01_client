@@ -1,4 +1,3 @@
-import { ITrack } from "../../../types/tracks";
 import authSlicer, { initialState } from "../authSlicer";
 import { authActions } from "../authSlicer";
 

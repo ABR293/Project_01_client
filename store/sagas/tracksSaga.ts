@@ -20,7 +20,7 @@ export function* workerFetchTracs({ payload = "" }) {
   }
 }
 
-const takeLatest: SagaAcceptor = () => Eff.takeLatest;
+const takeLatest: SagaAcceptor = Eff.takeLatest;
 
 export function* tracksSaga() {
   yield takeLatest("GET_TRACKS", workerFetchTracs);

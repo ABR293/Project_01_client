@@ -1,17 +1,14 @@
-import { Pause, PlayArrow, VolumeUp, VolumeDown } from "@mui/icons-material";
-import { Collapse, Grid, IconButton, Slide, Slider } from "@mui/material";
-import { Box } from "@mui/system";
+import { Pause, PlayArrow } from "@mui/icons-material";
+import { Grid, IconButton, Slide } from "@mui/material";
 import React, { useEffect } from "react";
-import { ITrack } from "../types/tracks";
-import TrackItem from "./TrackItem";
 import styles from "../styles/Player.module.sass";
 import TrackProgress from "./TrackProgress";
 import { useTypedSelector } from "../hooks/useTypedSelector";
 import { useActions } from "../hooks/useActions";
-import { baseURL } from "../api";
 import VolumeVidjet from "./VolumeVidjet";
-let audio: any;
+import { baseURL } from "../api/apiConfig";
 
+let audio: HTMLAudioElement;
 const Player: React.FC = () => {
   const { currentTime, duration, active, volume, pause, isSoundOn } =
     useTypedSelector((state) => state.player);
@@ -23,6 +20,19 @@ const Player: React.FC = () => {
     setDuration,
     toggleSound,
   } = useActions();
+
+  const setAudio = () => {
+    if (active) {
+      audio.src = `${baseURL}${active.audio}`;
+      audio.volume = volume / 100;
+      audio.onloadedmetadata = () => {
+        setDuration(Math.ceil(audio.duration));
+      };
+      audio.ontimeupdate = () => {
+        setCurrentTime(Math.ceil(audio.currentTime));
+      };
+    }
+  };
 
   useEffect(() => {
     if (!audio) {
@@ -43,19 +53,6 @@ const Player: React.FC = () => {
       audio.currentTime = currentTime;
     }
   }, [currentTime]);
-
-  const setAudio = () => {
-    if (active) {
-      audio.src = `${baseURL}${active.audio}`;
-      audio.volume = volume / 100;
-      audio.onloadedmetadata = () => {
-        setDuration(Math.ceil(audio.duration));
-      };
-      audio.ontimeupdate = () => {
-        setCurrentTime(Math.ceil(audio.currentTime));
-      };
-    }
-  };
 
   const play = () => {
     if (pause) {
@@ -87,13 +84,14 @@ const Player: React.FC = () => {
       in={!!active}
       direction="up"
       style={{ transitionDuration: "1000ms" }}
+      data-testid="Player"
     >
       <div className={styles.container}>
         <div className={styles.block}>
           <IconButton onClick={play}>
             {pause ? <PlayArrow /> : <Pause />}
           </IconButton>
-          <Grid direction="column">
+          <Grid container direction="column">
             <h3>{active?.name}</h3>
             <h5>{active?.artist}</h5>
           </Grid>

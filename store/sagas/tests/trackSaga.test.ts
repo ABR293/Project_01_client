@@ -1,5 +1,3 @@
-//
-import { call, put } from "redux-saga/effects";
 import Api from "../../../api/index";
 import { fetchTracksError, workerFetchTracs } from "../tracksSaga";
 import { tracksActions } from "../../slicers/tracksSlicer";
@@ -70,7 +68,7 @@ describe("fetchTracksSaga test", () => {
       workerFetchTracs as Saga<any[]>,
       action
     ).toPromise();
-    // expect(Api.getAllTracks).toHaveBeenCalled();
+    expect(Api.getAllTracks).toHaveBeenCalled();
     expect(dispatched).toEqual([
       {
         type: tracksActions.fetchTracksError.type,
@@ -103,61 +101,3 @@ describe("fetchTracksSaga test", () => {
     ]);
   });
 });
-
-// describe("fetch tracks test 2", () => {
-//   const action = { payload: "" };
-//   const tracks = [] as ITrack[];
-
-//   Api.getAllTracks = jest.fn().mockReturnValue(tracks);
-//   Api.searchTracks = jest.fn().mockReturnValue(tracks);
-//   const g = cloneableGenerator(workerFetchTracs)(action);
-
-//   it("put tracks in store when it`s work without errors", () => {
-//     const gClone = g.clone();
-//     expect(gClone.next().value).toEqual(call(Api.getAllTracks));
-//     expect(Api.getAllTracks).toHaveBeenCalled();
-
-//     expect(gClone.next(tracks).value).toEqual(
-//       put({
-//         type: tracksActions.fetchTracksSuccess.type,
-//         payload: tracks,
-//       })
-//     );
-//     expect(gClone.next().done).toBeTruthy();
-//   });
-
-//   it("put errors in store when it`s work with errors", () => {
-//     const gClone = g.clone();
-//     gClone.next(); // call
-//     expect(gClone && gClone.throw({}).value).toEqual(
-//       put({
-//         type: tracksActions.fetchTracksError.type,
-//         payload: "Произошла ошибка при загрузке треков",
-//       })
-//     );
-//     expect(gClone.next().done).toBeTruthy();
-//   });
-// });
-
-// describe("fetch tracks", () => {
-//   it("fetch tracks", () => {
-//     const action = {
-//       payload: "",
-//     };
-
-//     const tracks = [] as ITrack[];
-//     Api.getAllTracks = jest.fn().mockReturnValue(tracks);
-//     Api.searchTracks = jest.fn().mockReturnValue(tracks);
-
-//     const g = workerFetchTracs(action);
-//     expect(g.next().value).toEqual(call(Api.getAllTracks));
-//     expect(g.next(tracks).value).toEqual(
-//       put({
-//         type: tracksActions.fetchTracksSuccess.type,
-//         payload: tracks,
-//       })
-//     );
-
-//     expect(g.next().done).toBeTruthy();
-//   });
-// });

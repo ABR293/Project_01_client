@@ -74,7 +74,7 @@ const SignIn: React.FC = () => {
 
   return (
     <ThemeProvider theme={theme}>
-      <Container component="main" maxWidth="xs">
+      <Container component="main" maxWidth="xs" data-testid="password-reset">
         <CssBaseline />
         <Box
           sx={{

@@ -2,13 +2,7 @@
 import { call, put } from "redux-saga/effects";
 import Api from "../../../api/index";
 import { workerLogin, workerLogout, workerRegistration } from "../authSaga";
-import { tracksActions } from "../../slicers/tracksSlicer";
-import { ITrack } from "../../../types/tracks";
-import { runSaga, Saga } from "redux-saga";
-import { Action } from "@reduxjs/toolkit";
-import { authActions, UserDataType } from "../../slicers/authSlicer";
-import jwtDecode from "jwt-decode";
-import { access } from "fs";
+import { authActions } from "../../slicers/authSlicer";
 import { Tokens } from "../../../types/auth";
 import { store } from "../../index";
 import { submitAxiosError } from "../../../utils/errorSubmit";
@@ -33,6 +27,9 @@ describe(" auth saga tests", () => {
   afterAll(() => {
     localStorage.clear();
   });
+
+  const testError = "ErrorForTesting!";
+
   it(" workerRegistration test without error", () => {
     const action = {
       type: "REG_USER",
@@ -65,8 +62,7 @@ describe(" auth saga tests", () => {
       payload: new FormData(),
     };
 
-    const error = "someError";
-    Api.registration = jest.fn().mockRejectedValue(error);
+    Api.registration = jest.fn().mockRejectedValue(testError);
 
     const g = workerRegistration(action);
 
@@ -77,10 +73,10 @@ describe(" auth saga tests", () => {
       })
     );
     expect(g.next().value).toEqual(call(Api.registration, action.payload));
-    expect(g.throw(error).value).toEqual(
+    expect(g.throw(testError).value).toEqual(
       put({
         type: authActions.setError.type,
-        payload: submitAxiosError(error),
+        payload: submitAxiosError(testError),
       })
     );
     expect(localStorage.getItem(Tokens.Access)).toBeNull();
@@ -118,9 +114,7 @@ describe(" auth saga tests", () => {
       type: "LOGIN_USER",
       payload: new FormData(),
     };
-
-    const error = "someError";
-    Api.login = jest.fn().mockRejectedValue(error);
+    Api.login = jest.fn().mockRejectedValue(testError);
     // localStorage.setItem(Tokens.Access, "test");
 
     const g = workerLogin(action);
@@ -133,10 +127,10 @@ describe(" auth saga tests", () => {
     );
 
     expect(g.next().value).toEqual(call(Api.login, action.payload));
-    expect(g.throw(error).value).toEqual(
+    expect(g.throw(testError).value).toEqual(
       put({
         type: authActions.setError.type,
-        payload: submitAxiosError(error),
+        payload: submitAxiosError(testError),
       })
     );
     expect(localStorage.getItem(Tokens.Access)).toBeNull();

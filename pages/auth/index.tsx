@@ -1,5 +1,3 @@
-import { AccountCircle, ExitToApp } from "@mui/icons-material";
-import { Avatar, Button, Grid, IconButton } from "@mui/material";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import SignIn from "../../components/signIn";
@@ -26,7 +24,7 @@ const Index: React.FC<ProfilePropTypes> = () => {
       setUserData(jwt_decode(token) as UserDataType);
       router.push("./profile");
     }
-  }, [isAuth]);
+  }, [isAuth, setUserData, router]);
 
   if (isAuth) {
     return null;

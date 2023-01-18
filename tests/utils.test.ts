@@ -1,9 +1,6 @@
-import { DataArraySharp } from "@mui/icons-material";
 import {
   AuthValidationErrors,
-  FormValidation,
   validateEmail,
-  validateForm,
   validatePassword,
   validatePasswordRepeat,
 } from "../utils/formValidators";
@@ -72,10 +69,5 @@ describe("validateForm testing", () => {
     data.append("login", "login");
     data.append("password", "password");
     data.append("passwordRepeat", "passwordRepeat");
-
-    // validateForm(data);
-    // applyToAll(validateEmail);
-
-    // expect(validateEmail).toHaveBeenCalled();
   });
 });

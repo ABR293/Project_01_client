@@ -9,7 +9,7 @@ describe("player slicer test ", () => {
   });
 
   it("changing of volume by setVolume", () => {
-    const Num = Math.random();
+    const Num = 50;
     const action = playerActions.setVolume(Num);
     expect(action).toEqual({
       type: playerActions.setVolume.type,
@@ -20,7 +20,7 @@ describe("player slicer test ", () => {
   });
 
   it("changing of duration by setDuration", () => {
-    const Num = Math.random();
+    const Num = 50;
     const action = playerActions.setDuration(Num);
     expect(action).toEqual({
       type: playerActions.setDuration.type,
@@ -31,7 +31,7 @@ describe("player slicer test ", () => {
   });
 
   it("changing of currentTime by setCurrentTime", () => {
-    const Num = Math.random();
+    const Num = 50;
     const action = playerActions.setCurrentTime(Num);
     expect(action).toEqual({
       type: playerActions.setCurrentTime.type,

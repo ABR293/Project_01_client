@@ -1,9 +1,5 @@
-import { ITrack } from "../../types/tracks";
-
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
-import { useRouter } from "next/router";
-import { AppRegistration } from "@mui/icons-material";
 
 export const initialState = {
   userId: null as string | null,

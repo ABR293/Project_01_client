@@ -6,7 +6,6 @@ import { PayloadAction } from "@reduxjs/toolkit";
 import jwt_decode from "jwt-decode";
 import { UserDataType } from "../slicers/authSlicer";
 import { store } from "..";
-import { AxiosError } from "axios";
 import { SagaAcceptor } from "./index";
 import { Tokens } from "../../types/auth";
 import { submitAxiosError } from "../../utils/errorSubmit";
